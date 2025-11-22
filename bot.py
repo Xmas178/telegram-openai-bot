@@ -16,7 +16,7 @@ from telegram.ext import (
 )
 from dotenv import load_dotenv
 
-from config import Config
+from config import BotConfig
 from handlers.commands import CommandHandlers
 from handlers.chat import ChatHandler
 from utils.rate_limiter import RateLimiter
@@ -52,7 +52,7 @@ def main():
     """
     try:
         # Validate configuration
-        config = Config()
+        config = BotConfig()
         logger.info("Configuration validated successfully")
 
         # Create application
