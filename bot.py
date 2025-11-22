@@ -97,7 +97,7 @@ def main():
         )
 
         # Register callback query handler (for inline buttons)
-        application.add_handler(CallbackQueryHandler(command_handlers.button_callback))
+        application.add_handler(CallbackQueryHandler(chat_handler.handle_callback))
 
         # Register error handler
         application.add_error_handler(error_handler)
