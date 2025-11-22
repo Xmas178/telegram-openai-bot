@@ -2,6 +2,13 @@
 
 A secure, production-ready Telegram bot powered by OpenAI's GPT models. Built with Python, featuring comprehensive input validation, rate limiting, and session management.
 
+## 🎬 Demo
+
+**Video:** [Watch 51-second demo on YouTube Shorts](https://youtube.com/shorts/ZC6TKKdAF5U)
+
+**Try the bot:** [@sami_demo_bot](https://t.me/sami_demo_bot)
+
+
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![OpenAI](https://img.shields.io/badge/OpenAI-API-orange.svg)
