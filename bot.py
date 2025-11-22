@@ -62,7 +62,9 @@ def main():
         rate_limiter = RateLimiter(max_requests=config.max_requests_per_minute)
         session_manager = SessionManager(max_history=5)
 
-        command_handlers = CommandHandlers(session_manager)
+        command_handlers = CommandHandlers(
+            session_manager=session_manager, rate_limiter=rate_limiter, config=config
+        )
         chat_handler = ChatHandler(
             openai_key=config.openai_api_key,
             model=config.openai_model,

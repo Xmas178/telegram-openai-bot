@@ -141,9 +141,9 @@ class CommandHandlers:
         settings_text = (
             "⚙️ *Current Settings:*\n\n"
             f"🤖 *AI Model:* {self.config.openai_model}\n"
-            f"📊 *Max Tokens:* {self.config.max_tokens}\n"
-            f"🌡️ *Temperature:* {self.config.temperature}\n"
-            f"💬 *Chat History:* {session_info['message_count']}/{self.config.max_tokens} messages\n"
+            f"📊 *Max Tokens:* {self.config.openai_max_tokens}\n"
+            f"🌡️ *Temperature:* {self.config.openai_temperature}\n"
+            f"💬 *Chat History:* {session_info['message_count']}/{self.session_manager.max_history} messages\n"
             f"⏱️ *Rate Limit:* {self.config.max_requests_per_minute} messages/minute\n\n"
             f"ℹ️ *Session Info:*\n"
             f"Messages in history: {session_info['message_count']}\n"
