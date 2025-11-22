@@ -11,6 +11,7 @@ from telegram.ext import (
     Application,
     CommandHandler,
     MessageHandler,
+    CallbackQueryHandler,
     filters,
     ContextTypes,
 )
@@ -21,6 +22,7 @@ from handlers.commands import CommandHandlers
 from handlers.chat import ChatHandler
 from utils.rate_limiter import RateLimiter
 from utils.session_manager import SessionManager
+from utils.openai_client import OpenAIClient
 
 # Load environment variables
 load_dotenv()
@@ -58,20 +60,27 @@ def main():
         # Create application
         application = Application.builder().token(config.telegram_token).build()
 
-        # Initialize handlers
+        # Initialize dependencies
         rate_limiter = RateLimiter(max_requests=config.max_requests_per_minute)
         session_manager = SessionManager(max_history=5)
 
-        command_handlers = CommandHandlers(
-            session_manager=session_manager, rate_limiter=rate_limiter, config=config
-        )
-        chat_handler = ChatHandler(
-            openai_key=config.openai_api_key,
+        # Create OpenAI client
+        openai_client = OpenAIClient(
+            api_key=config.openai_api_key,
             model=config.openai_model,
             max_tokens=config.openai_max_tokens,
             temperature=config.openai_temperature,
+        )
+
+        # Initialize handlers
+        command_handlers = CommandHandlers(
+            session_manager=session_manager, rate_limiter=rate_limiter, config=config
+        )
+
+        chat_handler = ChatHandler(
             session_manager=session_manager,
             rate_limiter=rate_limiter,
+            openai_client=openai_client,
         )
 
         # Register command handlers
