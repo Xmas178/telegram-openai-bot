@@ -213,5 +213,25 @@ def main():
         traceback.print_exc()
 
 
+# Keep alive for Render.com
+import os
+
+if os.environ.get("RENDER"):
+    from http.server import HTTPServer, BaseHTTPRequestHandler
+
+    class HealthCheckHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"Bot is running")
+
+    def run_health_server():
+        server = HTTPServer(("0.0.0.0", 10000), HealthCheckHandler)
+        server.serve_forever()
+
+    import threading
+
+    threading.Thread(target=run_health_server, daemon=True).start()
+
 if __name__ == "__main__":
     main()
