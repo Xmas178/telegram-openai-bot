@@ -1,7 +1,8 @@
 """
 Telegram OpenAI Bot - Production Ready
 Secure AI-powered bot with rate limiting and session management
-Author: Sami (CodeNob Dev)
+Author: Sami (crake178)
+Telegram OpenAI Bot - Auto-deployed via GitHub Actions
 """
 
 import logging

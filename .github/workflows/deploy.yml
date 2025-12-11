@@ -1,0 +1,62 @@
+# GitHub Actions workflow for automatic deployment to Hetzner VPS
+# Triggers on push to main branch
+# Deploys Telegram bot to production server
+
+name: Deploy to Hetzner VPS
+
+# Trigger: Run this workflow when code is pushed to main branch
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        # Use Ubuntu latest version for the runner
+        runs-on: ubuntu-latest
+
+        steps:
+            # Step 1: Checkout the repository code
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Step 2: Setup SSH connection to server
+            - name: Setup SSH
+              run: |
+                  # Create .ssh directory if it doesn't exist
+                  mkdir -p ~/.ssh
+
+                  # Add private SSH key from GitHub secrets
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+
+                  # Set correct permissions (SSH requires strict permissions)
+                  chmod 600 ~/.ssh/deploy_key
+
+                  # Add server to known_hosts to avoid "host verification failed" error
+                  ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+            # Step 3: Deploy to server via SSH
+            - name: Deploy to server
+              run: |
+                  ssh -i ~/.ssh/deploy_key \
+                      -p ${{ secrets.SSH_PORT }} \
+                      ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+
+                    # Navigate to project directory
+                    cd ${{ secrets.DEPLOY_PATH }}
+
+                    # Pull latest code from GitHub
+                    echo "Pulling latest code..."
+                    git pull origin main
+
+                    # Rebuild and restart Docker container
+                    echo "Rebuilding Docker container..."
+                    docker compose build --no-cache
+
+                    echo "Restarting container..."
+                    docker compose up -d
+
+                    # Show container status
+                    echo "Deployment complete! Container status:"
+                    docker compose ps
+                  EOF
